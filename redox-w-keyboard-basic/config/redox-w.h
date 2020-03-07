@@ -15,6 +15,13 @@
 #define L_C05 5
 #define L_C06 4
 #define L_C07 3
+#define L_C08 2
+#define L_C09 1
+#define L_C10 28
+#define L_C11 25 
+#define L_C12 24
+#define L_C13 23
+#define L_C14 22
 #define L_R01 19
 #define L_R02 18
 #define L_R03 17
@@ -47,6 +54,13 @@
 #define C05 L_C05
 #define C06 L_C06
 #define C07 L_C07
+#define C08 L_C08
+#define C09 L_C09
+#define C10 L_C10
+#define C11 L_C11
+#define C12 L_C12
+#define C13 L_C13
+#define C14 L_C14
 #define R01 L_R01
 #define R02 L_R02
 #define R03 L_R03
@@ -74,7 +88,7 @@
 
 #endif
 
-#define COLUMNS 7
+#define COLUMNS 14
 #define ROWS 5
 
 // Low frequency clock source to be used by the SoftDevice

@@ -20,8 +20,8 @@
 const nrf_drv_rtc_t rtc_maint = NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance of nrf_drv_rtc for RTC0. */
 const nrf_drv_rtc_t rtc_deb = NRF_DRV_RTC_INSTANCE(1); /**< Declaring an instance of nrf_drv_rtc for RTC1. */
 
-const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05, C06, C07 };
-const unsigned short REMAINING_POSITIONS = 8 - COLUMNS;
+const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14 };
+const unsigned short REMAINING_POSITIONS = 16 - COLUMNS;
 
 // Define payload length
 #define TX_PAYLOAD_LENGTH ROWS ///< 5 byte payload length when transmitting
@@ -65,6 +65,13 @@ static void gpio_config(void)
     nrf_gpio_cfg_output(C05);
     nrf_gpio_cfg_output(C06);
     nrf_gpio_cfg_output(C07);
+    nrf_gpio_cfg_output(C08);
+    nrf_gpio_cfg_output(C09);
+    nrf_gpio_cfg_output(C10);
+    nrf_gpio_cfg_output(C11);
+    nrf_gpio_cfg_output(C12);
+    nrf_gpio_cfg_output(C13);
+    nrf_gpio_cfg_output(C14);
 }
 
 // Return the key states
@@ -193,6 +200,13 @@ static void handler_debounce(nrf_drv_rtc_int_type_t int_type)
             nrf_gpio_pin_set(C05);
             nrf_gpio_pin_set(C06);
             nrf_gpio_pin_set(C07);
+            nrf_gpio_pin_set(C08);
+            nrf_gpio_pin_set(C09);
+            nrf_gpio_pin_set(C10);
+            nrf_gpio_pin_set(C11);
+            nrf_gpio_pin_set(C12);
+            nrf_gpio_pin_set(C13);
+            nrf_gpio_pin_set(C14);
         }
 
     }
@@ -288,6 +302,13 @@ void GPIOTE_IRQHandler(void)
         nrf_gpio_pin_clear(C05);
         nrf_gpio_pin_clear(C06);
         nrf_gpio_pin_clear(C07);
+        nrf_gpio_pin_clear(C08);
+        nrf_gpio_pin_clear(C09);
+        nrf_gpio_pin_clear(C10);
+        nrf_gpio_pin_clear(C11);
+        nrf_gpio_pin_clear(C12);
+        nrf_gpio_pin_clear(C13);
+        nrf_gpio_pin_clear(C14);
 
         //TODO: proper interrupt handling to avoid fake interrupts because of matrix scanning
         //debouncing = false;
