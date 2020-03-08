@@ -21,7 +21,7 @@ const nrf_drv_rtc_t rtc_maint = NRF_DRV_RTC_INSTANCE(0); /**< Declaring an insta
 const nrf_drv_rtc_t rtc_deb = NRF_DRV_RTC_INSTANCE(1); /**< Declaring an instance of nrf_drv_rtc for RTC1. */
 
 const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14 };
-const unsigned short REMAINING_POSITIONS = 8 - COLUMNS / 2;
+const unsigned short REMAINING_POSITIONS = 8 - 7;
 
 // Define payload length
 #define TX_PAYLOAD_LENGTH DROWS ///< 5 byte payload length when transmitting
@@ -85,7 +85,7 @@ static void read_keys(void)
     for (c = 0; c < COLUMNS; ++c) {
         nrf_gpio_pin_set(COL_PINS[c]);
         input = NRF_GPIO->IN;
-        if(c < COLUMNS / 2){
+        if(c < 7){
             row_stat[0] = (row_stat[0] << 1) | ((input >> R01) & 1);
             row_stat[1] = (row_stat[1] << 1) | ((input >> R02) & 1);
             row_stat[2] = (row_stat[2] << 1) | ((input >> R03) & 1);
@@ -187,9 +187,9 @@ static void handler_debounce(nrf_drv_rtc_int_type_t int_type)
     {
         // if the keystate is different from the last data
         // sent to the receiver, start debouncing
-        if (!compare_keys(keys, keys_buffer, ROWS))
+        if (!compare_keys(keys, keys_buffer, DROWS))
         {
-            for(int k=0; k < ROWS; k++)
+            for(int k=0; k < DROWS; k++)
             {
                 keys_snapshot[k] = keys_buffer[k];
             }
