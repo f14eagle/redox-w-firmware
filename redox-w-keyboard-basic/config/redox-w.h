@@ -90,6 +90,7 @@
 
 #define COLUMNS 14
 #define ROWS 5
+#define PAYLOAD_LENGTH 10 // ROWS * 2
 
 // Low frequency clock source to be used by the SoftDevice
 #define NRF_CLOCK_LFCLKSRC      {.source        = NRF_CLOCK_LF_SRC_XTAL,            \

@@ -21,10 +21,10 @@ const nrf_drv_rtc_t rtc_maint = NRF_DRV_RTC_INSTANCE(0); /**< Declaring an insta
 const nrf_drv_rtc_t rtc_deb = NRF_DRV_RTC_INSTANCE(1); /**< Declaring an instance of nrf_drv_rtc for RTC1. */
 
 const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14 };
-const unsigned short REMAINING_POSITIONS = 16 - COLUMNS;
+const unsigned short REMAINING_POSITIONS = 8 - COLUMNS / 2;
 
 // Define payload length
-#define TX_PAYLOAD_LENGTH ROWS ///< 5 byte payload length when transmitting
+#define TX_PAYLOAD_LENGTH PAYLOAD_LENGTH ///< 5 byte payload length when transmitting
 
 // Data and acknowledgement payloads
 static uint8_t data_payload[TX_PAYLOAD_LENGTH];                ///< Payload to send to Host.
@@ -79,7 +79,7 @@ static void read_keys(void)
 {
     unsigned short c;
     volatile uint32_t input = 0;
-    uint8_t row_stat[5] = {0, 0, 0, 0, 0};
+    uint8_t row_stat[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // scan matrix by columns
     for (c = 0; c < COLUMNS; ++c) {
