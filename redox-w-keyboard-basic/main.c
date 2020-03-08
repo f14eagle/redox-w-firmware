@@ -24,7 +24,7 @@ const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05, C06, C07, C08, C09
 const unsigned short REMAINING_POSITIONS = 8 - COLUMNS / 2;
 
 // Define payload length
-#define TX_PAYLOAD_LENGTH PAYLOAD_LENGTH ///< 5 byte payload length when transmitting
+#define TX_PAYLOAD_LENGTH DROWS ///< 5 byte payload length when transmitting
 
 // Data and acknowledgement payloads
 static uint8_t data_payload[TX_PAYLOAD_LENGTH];                ///< Payload to send to Host.
@@ -85,11 +85,19 @@ static void read_keys(void)
     for (c = 0; c < COLUMNS; ++c) {
         nrf_gpio_pin_set(COL_PINS[c]);
         input = NRF_GPIO->IN;
-        row_stat[0] = (row_stat[0] << 1) | ((input >> R01) & 1);
-        row_stat[1] = (row_stat[1] << 1) | ((input >> R02) & 1);
-        row_stat[2] = (row_stat[2] << 1) | ((input >> R03) & 1);
-        row_stat[3] = (row_stat[3] << 1) | ((input >> R04) & 1);
-        row_stat[4] = (row_stat[4] << 1) | ((input >> R05) & 1);
+        if(c < COLUMNS / 2){
+            row_stat[0] = (row_stat[0] << 1) | ((input >> R01) & 1);
+            row_stat[1] = (row_stat[1] << 1) | ((input >> R02) & 1);
+            row_stat[2] = (row_stat[2] << 1) | ((input >> R03) & 1);
+            row_stat[3] = (row_stat[3] << 1) | ((input >> R04) & 1);
+            row_stat[4] = (row_stat[4] << 1) | ((input >> R05) & 1);
+        }else{
+            row_stat[5] = (row_stat[5] << 1) | ((input >> R01) & 1);
+            row_stat[6] = (row_stat[6] << 1) | ((input >> R02) & 1);
+            row_stat[7] = (row_stat[7] << 1) | ((input >> R03) & 1);
+            row_stat[8] = (row_stat[8] << 1) | ((input >> R04) & 1);
+            row_stat[9] = (row_stat[9] << 1) | ((input >> R05) & 1);
+        }
         nrf_gpio_pin_clear(COL_PINS[c]);
     }
 
@@ -98,6 +106,11 @@ static void read_keys(void)
     keys_buffer[2] = row_stat[2] << REMAINING_POSITIONS;
     keys_buffer[3] = row_stat[3] << REMAINING_POSITIONS;
     keys_buffer[4] = row_stat[4] << REMAINING_POSITIONS;
+    keys_buffer[5] = row_stat[5] << REMAINING_POSITIONS;
+    keys_buffer[6] = row_stat[6] << REMAINING_POSITIONS;
+    keys_buffer[7] = row_stat[7] << REMAINING_POSITIONS;
+    keys_buffer[8] = row_stat[8] << REMAINING_POSITIONS;
+    keys_buffer[9] = row_stat[9] << REMAINING_POSITIONS;
 
     return;
 }
