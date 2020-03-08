@@ -35,7 +35,7 @@ static uint8_t ack_payload[NRF_GZLL_CONST_MAX_PAYLOAD_LENGTH]; ///< Placeholder 
 #define ACTIVITY 500
 
 // Key buffers
-static uint8_t keys[ROWS], keys_snapshot[ROWS], keys_buffer[ROWS];
+static uint8_t keys[DROWS], keys_snapshot[DROWS], keys_buffer[DROWS];
 static uint32_t debounce_ticks, activity_ticks;
 static volatile bool debouncing = false;
 
@@ -129,7 +129,7 @@ static bool compare_keys(uint8_t* first, uint8_t* second, uint32_t size)
 
 static bool empty_keys(void)
 {
-    for(int i=0; i < ROWS; i++)
+    for(int i=0; i < DROWS; i++)
     {
         if (keys_buffer[i])
         {
@@ -142,7 +142,7 @@ static bool empty_keys(void)
 // Assemble packet and send to receiver
 static void send_data(void)
 {
-    for(int i=0; i < ROWS; i++)
+    for(int i=0; i < DROWS; i++)
     {
         data_payload[i] = keys[i];
     }
@@ -164,13 +164,13 @@ static void handler_debounce(nrf_drv_rtc_int_type_t int_type)
     if (debouncing)
     {
         // if debouncing, check if current keystates equal to the snapshot
-        if (compare_keys(keys_snapshot, keys_buffer, ROWS))
+        if (compare_keys(keys_snapshot, keys_buffer, DROWS))
         {
             // DEBOUNCE ticks of stable sampling needed before sending data
             debounce_ticks++;
             if (debounce_ticks == DEBOUNCE)
             {
-                for(int j=0; j < ROWS; j++)
+                for(int j=0; j < DROWS; j++)
                 {
                     keys[j] = keys_snapshot[j];
                 }
