@@ -43,10 +43,10 @@ static volatile bool debouncing = false;
 static volatile bool init_ok, enable_ok, push_ok, pop_ok, tx_success;
 
 #ifdef COMPILE_LEFT
-static uint8_t channel_table[3]={4, 42, 77};
+static uint8_t channel_table[3]={6, 44, 79};
 #endif
 #ifdef COMPILE_RIGHT
-static uint8_t channel_table[3]={25, 63, 33};
+static uint8_t channel_table[3]={27, 65, 35};
 #endif
 
 // Setup switch pins with pullups
@@ -267,8 +267,8 @@ int main()
     nrf_gzll_set_timeslot_period(900);
 
     // Addressing
-    nrf_gzll_set_base_address_0(0x01020304);
-    nrf_gzll_set_base_address_1(0x05060708);
+    nrf_gzll_set_base_address_0(0x04030201);
+    nrf_gzll_set_base_address_1(0x08070605);
 
     // Enable Gazell to start sending over the air
     nrf_gzll_enable();

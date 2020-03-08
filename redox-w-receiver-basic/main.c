@@ -53,7 +53,7 @@ uint32_t left_active = 0;
 uint32_t right_active = 0;
 uint8_t c;
 
-static uint8_t channel_table[6]={4, 25, 42, 63, 77, 33};
+static uint8_t channel_table[6]={6, 27, 44, 65, 79, 35};
 
 void uart_error_handle(app_uart_evt_t * p_event)
 {
@@ -98,8 +98,8 @@ int main(void)
     nrf_gzll_set_timeslot_period(900);
 
     // Addressing
-    nrf_gzll_set_base_address_0(0x01020304);
-    nrf_gzll_set_base_address_1(0x05060708);
+    nrf_gzll_set_base_address_0(0x04030201);
+    nrf_gzll_set_base_address_1(0x08070605);
 
     // Load data into TX queue
     ack_payload[0] = 0x55;
