@@ -44,7 +44,7 @@
 static uint8_t data_payload_left[NRF_GZLL_CONST_MAX_PAYLOAD_LENGTH];  ///< Placeholder for data payload received from host.
 static uint8_t data_payload_right[NRF_GZLL_CONST_MAX_PAYLOAD_LENGTH];  ///< Placeholder for data payload received from host.
 static uint8_t ack_payload[TX_PAYLOAD_LENGTH];                   ///< Payload to attach to ACK sent to device.
-static uint8_t data_buffer[10];
+static uint8_t data_buffer[15];
 
 // Debug helper variables
 extern nrf_gzll_error_code_t nrf_gzll_error_code;   ///< Error code
@@ -104,7 +104,8 @@ int main(void)
     // Load data into TX queue
     ack_payload[0] = 0x55;
     nrf_gzll_add_packet_to_tx_fifo(0, data_payload_left, TX_PAYLOAD_LENGTH);
-    nrf_gzll_add_packet_to_tx_fifo(1, data_payload_right, TX_PAYLOAD_LENGTH);
+    // Use pipe 2 for pad
+    nrf_gzll_add_packet_to_tx_fifo(2, data_payload_right, TX_PAYLOAD_LENGTH);
 
     // Enable Gazell to start sending over the air
     nrf_gzll_enable();
@@ -203,13 +204,54 @@ int main(void)
         if (packet_received_right)
         {
             packet_received_right = false;
+
+            data_buffer[10] =  ((data_payload_right[0] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_right[0] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_right[0] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_right[0] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_right[0] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_right[0] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_right[0] & 1<<1) ? 1:0) << 6;
+
+            data_buffer[11] =  ((data_payload_right[1] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_right[1] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_right[1] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_right[1] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_right[1] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_right[1] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_right[1] & 1<<1) ? 1:0) << 6;
+
+            data_buffer[12] =  ((data_payload_right[2] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_right[2] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_right[2] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_right[2] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_right[2] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_right[2] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_right[2] & 1<<1) ? 1:0) << 6;
+
+            data_buffer[13] =  ((data_payload_right[3] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_right[3] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_right[3] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_right[3] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_right[3] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_right[3] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_right[3] & 1<<1) ? 1:0) << 6;
+
+            data_buffer[14] =  ((data_payload_right[4] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_right[4] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_right[4] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_right[4] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_right[4] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_right[4] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_right[4] & 1<<1) ? 1:0) << 6
+
         }
 
         // checking for a poll request from QMK
         if (app_uart_get(&c) == NRF_SUCCESS && c == 's')
         {
             // sending data to QMK, and an end byte
-            nrf_drv_uart_tx(data_buffer,10);
+            nrf_drv_uart_tx(data_buffer,15);
             app_uart_put(0xE0);
 
             // debugging help, for printing keystates to a serial console
@@ -256,6 +298,12 @@ int main(void)
         if (right_active > INACTIVE)
         {
             right_active = 0;
+
+            data_buffer[10] = 0;
+            data_buffer[11] = 0;
+            data_buffer[12] = 0;
+            data_buffer[13] = 0;
+            data_buffer[14] = 0;
         }
     }
 }
@@ -278,7 +326,7 @@ void nrf_gzll_host_rx_data_ready(uint32_t pipe, nrf_gzll_host_rx_info_t rx_info)
         // Pop packet and write first byte of the payload to the GPIO port.
         nrf_gzll_fetch_packet_from_rx_fifo(pipe, data_payload_left, &data_payload_length);
     }
-    else if (pipe == 1)
+    else if (pipe == 2)
     {
         packet_received_right = true;
         right_active = 0;

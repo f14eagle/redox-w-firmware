@@ -67,11 +67,12 @@
 #define R04 L_R04
 #define R05 L_R05
 
+#define COLUMNS 14
 #endif
 
 #ifdef COMPILE_RIGHT
 
-#define PIPE_NUMBER 1
+#define PIPE_NUMBER 2
 
 #define C01 R_C01
 #define C02 R_C02
@@ -86,9 +87,9 @@
 #define R04 R_R04
 #define R05 R_R05
 
+#define COLUMNS 5 
 #endif
 
-#define COLUMNS 14
 #define ROWS 5
 #define DROWS 10 // ROWS * 2
 
