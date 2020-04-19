@@ -22,16 +22,14 @@ const nrf_drv_rtc_t rtc_deb = NRF_DRV_RTC_INSTANCE(1); /**< Declaring an instanc
 
 #ifdef COMPILE_LEFT
 const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14 };
-// Define payload length
-#define TX_PAYLOAD_LENGTH DROWS ///< 5 byte payload length when transmitting
 #endif
 #ifdef COMPILE_RIGHT
 const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05 };
-// Define payload length
-#define TX_PAYLOAD_LENGTH 5 ///< 5 byte payload length when transmitting
 #endif
 const unsigned short REMAINING_POSITIONS = 8 - 7;
 
+// Define payload length
+#define TX_PAYLOAD_LENGTH DROWS ///< 5 byte payload length when transmitting
 // Data and acknowledgement payloads
 static uint8_t data_payload[TX_PAYLOAD_LENGTH];                ///< Payload to send to Host.
 static uint8_t ack_payload[NRF_GZLL_CONST_MAX_PAYLOAD_LENGTH]; ///< Placeholder for received ACK payloads from Host.
