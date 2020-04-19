@@ -26,7 +26,7 @@ const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05, C06, C07, C08, C09
 #ifdef COMPILE_RIGHT
 const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05 };
 #endif
-const unsigned short REMAINING_POSITIONS = 8 - 7;
+const unsigned short REMAINING_POSITIONS = 8 - COLUMNS7;
 
 // Define payload length
 #define TX_PAYLOAD_LENGTH DROWS ///< 5 byte payload length when transmitting
