@@ -22,11 +22,12 @@ const nrf_drv_rtc_t rtc_deb = NRF_DRV_RTC_INSTANCE(1); /**< Declaring an instanc
 
 #ifdef COMPILE_LEFT
 const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14 };
+const unsigned short REMAINING_POSITIONS = 8 - 7;
 #endif
 #ifdef COMPILE_RIGHT
 const uint32_t COL_PINS[COLUMNS] = { C01, C02, C03, C04, C05 };
+const unsigned short REMAINING_POSITIONS = 8 - COLUMNS;
 #endif
-const unsigned short REMAINING_POSITIONS = 8 - COLUMNS7;
 
 // Define payload length
 #define TX_PAYLOAD_LENGTH DROWS ///< 5 byte payload length when transmitting
