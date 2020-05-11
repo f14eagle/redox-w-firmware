@@ -57,24 +57,22 @@
 
 #ifdef COMPILE_RIGHT
 
-#define PIPE_NUMBER 1
+#define PIPE_NUMBER 2
 
-#define C01 R_C01
-#define C02 R_C02
-#define C03 R_C03
-#define C04 R_C04
-#define C05 R_C05
-#define C06 R_C06
-#define C07 R_C07
-#define R01 R_R01
-#define R02 R_R02
-#define R03 R_R03
-#define R04 R_R04
-#define R05 R_R05
+#define C01 L_C01
+#define C02 L_C02
+#define C03 L_C03
+#define C04 L_C04
+#define C05 L_C05
+#define R01 L_R01
+#define R02 L_R02
+#define R03 L_R03
+#define R04 L_R04
+#define R05 L_R05
 
 #endif
 
-#define COLUMNS 7
+#define COLUMNS 5
 #define ROWS 5
 
 // Low frequency clock source to be used by the SoftDevice
