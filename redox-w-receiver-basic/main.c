@@ -346,7 +346,7 @@ void nrf_gzll_host_rx_data_ready(uint32_t pipe, nrf_gzll_host_rx_info_t rx_info)
         packet_received_pad0 = true;
         pad0_active = 0;
         // Pop packet and write first byte of the payload to the GPIO port.
-        nrf_gzll_fetch_packet_from_rx_fifo(pipe, data_payload_right, &data_payload_length);
+        nrf_gzll_fetch_packet_from_rx_fifo(pipe, data_payload_pad0, &data_payload_length);
     }
 
     // not sure if required, I guess if enough packets are missed during blocking uart
