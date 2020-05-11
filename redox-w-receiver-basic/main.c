@@ -256,7 +256,7 @@ int main(void)
         if (app_uart_get(&c) == NRF_SUCCESS && c == 's')
         {
             // sending data to QMK, and an end byte
-            nrf_drv_uart_tx(data_buffer,10);
+            nrf_drv_uart_tx(data_buffer,15);
             app_uart_put(0xE0);
 
             // debugging help, for printing keystates to a serial console
