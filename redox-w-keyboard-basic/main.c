@@ -48,10 +48,10 @@ static volatile bool debouncing = false;
 static volatile bool init_ok, enable_ok, push_ok, pop_ok, tx_success;
 
 #ifdef COMPILE_LEFT
-static uint8_t channel_table[3]={6, 44, 79};
+static uint8_t channel_table[3]={7, 45, 80};
 #endif
 #ifdef COMPILE_RIGHT
-static uint8_t channel_table[3]={27, 65, 35};
+static uint8_t channel_table[3]={28, 66, 36};
 #endif
 
 // Setup switch pins with pullups
@@ -62,6 +62,7 @@ static void gpio_config(void)
     nrf_gpio_cfg_sense_input(R03, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
     nrf_gpio_cfg_sense_input(R04, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
     nrf_gpio_cfg_sense_input(R05, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
+    nrf_gpio_cfg_sense_input(R06, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
 
     #ifdef COMPILE_LEFT
     nrf_gpio_cfg_output(C01);
@@ -95,7 +96,7 @@ static void read_keys(void)
     volatile uint32_t input = 0;
 
     #ifdef COMPILE_LEFT
-    uint8_t row_stat[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    uint8_t row_stat[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // scan matrix by columns
     for (c = 0; c < COLUMNS; ++c) {
@@ -107,12 +108,14 @@ static void read_keys(void)
             row_stat[2] = (row_stat[2] << 1) | ((input >> R03) & 1);
             row_stat[3] = (row_stat[3] << 1) | ((input >> R04) & 1);
             row_stat[4] = (row_stat[4] << 1) | ((input >> R05) & 1);
+            row_stat[5] = (row_stat[5] << 1) | ((input >> R06) & 1);
         }else{
-            row_stat[5] = (row_stat[5] << 1) | ((input >> R01) & 1);
-            row_stat[6] = (row_stat[6] << 1) | ((input >> R02) & 1);
-            row_stat[7] = (row_stat[7] << 1) | ((input >> R03) & 1);
-            row_stat[8] = (row_stat[8] << 1) | ((input >> R04) & 1);
-            row_stat[9] = (row_stat[9] << 1) | ((input >> R05) & 1);
+            row_stat[6] = (row_stat[6] << 1) | ((input >> R01) & 1);
+            row_stat[7] = (row_stat[7] << 1) | ((input >> R02) & 1);
+            row_stat[8] = (row_stat[8] << 1) | ((input >> R03) & 1);
+            row_stat[9] = (row_stat[9] << 1) | ((input >> R04) & 1);
+            row_stat[10] = (row_stat[10] << 1) | ((input >> R05) & 1);
+            row_stat[11] = (row_stat[11] << 1) | ((input >> R06) & 1);
         }
         nrf_gpio_pin_clear(COL_PINS[c]);
     }
@@ -127,10 +130,12 @@ static void read_keys(void)
     keys_buffer[7] = row_stat[7] << REMAINING_POSITIONS;
     keys_buffer[8] = row_stat[8] << REMAINING_POSITIONS;
     keys_buffer[9] = row_stat[9] << REMAINING_POSITIONS;
+    keys_buffer[10] = row_stat[10] << REMAINING_POSITIONS;
+    keys_buffer[11] = row_stat[11] << REMAINING_POSITIONS;
     #endif
 
     #ifdef COMPILE_RIGHT
-    uint8_t row_stat[5] = {0, 0, 0, 0, 0};
+    uint8_t row_stat[5] = {0, 0, 0, 0, 0, 0};
 
     // scan matrix by columns
     for (c = 0; c < COLUMNS; ++c) {
@@ -141,6 +146,7 @@ static void read_keys(void)
             row_stat[2] = (row_stat[2] << 1) | ((input >> R03) & 1);
             row_stat[3] = (row_stat[3] << 1) | ((input >> R04) & 1);
             row_stat[4] = (row_stat[4] << 1) | ((input >> R05) & 1);
+            row_stat[5] = (row_stat[5] << 1) | ((input >> R06) & 1);
         nrf_gpio_pin_clear(COL_PINS[c]);
     }
 
@@ -149,6 +155,7 @@ static void read_keys(void)
     keys_buffer[2] = row_stat[2] << REMAINING_POSITIONS;
     keys_buffer[3] = row_stat[3] << REMAINING_POSITIONS;
     keys_buffer[4] = row_stat[4] << REMAINING_POSITIONS;
+    keys_buffer[5] = row_stat[5] << REMAINING_POSITIONS;
     #endif
 
     return;
@@ -315,8 +322,8 @@ int main()
     nrf_gzll_set_timeslot_period(900);
 
     // Addressing
-    nrf_gzll_set_base_address_0(0x04030201);
-    nrf_gzll_set_base_address_1(0x08070605);
+    nrf_gzll_set_base_address_0(0x14131211);
+    nrf_gzll_set_base_address_1(0x18171615);
 
     // Enable Gazell to start sending over the air
     nrf_gzll_enable();

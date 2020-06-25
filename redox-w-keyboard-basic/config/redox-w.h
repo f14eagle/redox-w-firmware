@@ -15,18 +15,19 @@
 #define L_C05 5
 #define L_C06 4
 #define L_C07 3
-#define L_C08 2
-#define L_C09 1
+#define L_C08 1
+#define L_C09 0
 #define L_C10 28
 #define L_C11 25 
 #define L_C12 24
 #define L_C13 23
 #define L_C14 22
-#define L_R01 19
-#define L_R02 18
-#define L_R03 17
-#define L_R04 14
-#define L_R05 13
+#define L_R01 16
+#define L_R02 15
+#define L_R03 14
+#define L_R04 13
+#define L_R05 12
+#define L_R06 21 
 
 // right hand pins
 
@@ -66,9 +67,10 @@
 #define R03 L_R03
 #define R04 L_R04
 #define R05 L_R05
+#define R06 L_R06
 
 #define COLUMNS 14
-#define DROWS 10 // ROWS * 2
+#define DROWS 12 // ROWS * 2
 #endif
 
 #ifdef COMPILE_RIGHT
@@ -85,12 +87,13 @@
 #define R03 L_R03
 #define R04 L_R04
 #define R05 L_R05
+#define R06 L_R06
 
 #define COLUMNS 5 
-#define DROWS 5 // ROWS
+#define DROWS 6 // ROWS
 #endif
 
-#define ROWS 5
+#define ROWS 6
 
 // Low frequency clock source to be used by the SoftDevice
 #define NRF_CLOCK_LFCLKSRC      {.source        = NRF_CLOCK_LF_SRC_XTAL,            \
