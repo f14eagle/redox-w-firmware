@@ -43,17 +43,19 @@
 // Data and acknowledgement payloads
 static uint8_t data_payload_left[NRF_GZLL_CONST_MAX_PAYLOAD_LENGTH];  ///< Placeholder for data payload received from host.
 static uint8_t data_payload_right[NRF_GZLL_CONST_MAX_PAYLOAD_LENGTH];  ///< Placeholder for data payload received from host.
+static uint8_t data_payload_pad0[NRF_GZLL_CONST_MAX_PAYLOAD_LENGTH];  ///< Placeholder for data payload received from host.
 static uint8_t ack_payload[TX_PAYLOAD_LENGTH];                   ///< Payload to attach to ACK sent to device.
-static uint8_t data_buffer[10];
+static uint8_t data_buffer[15];
 
 // Debug helper variables
 extern nrf_gzll_error_code_t nrf_gzll_error_code;   ///< Error code
-static bool init_ok, enable_ok, push_ok, pop_ok, packet_received_left, packet_received_right;
+static bool init_ok, enable_ok, push_ok, pop_ok, packet_received_left, packet_received_right, packet_received_pad0;
 uint32_t left_active = 0;
 uint32_t right_active = 0;
+uint32_t pad0_active = 0;
 uint8_t c;
 
-static uint8_t channel_table[6]={4, 25, 42, 63, 77, 33};
+static uint8_t channel_table[9]={4, 25, 29, 42, 63, 67, 77, 33, 37};
 
 void uart_error_handle(app_uart_evt_t * p_event)
 {
@@ -93,7 +95,7 @@ int main(void)
 
     // Initialize Gazell
     nrf_gzll_init(NRF_GZLL_MODE_HOST);
-    nrf_gzll_set_channel_table(channel_table,6);
+    nrf_gzll_set_channel_table(channel_table,9);
     nrf_gzll_set_datarate(NRF_GZLL_DATARATE_1MBIT);
     nrf_gzll_set_timeslot_period(900);
 
@@ -105,6 +107,7 @@ int main(void)
     ack_payload[0] = 0x55;
     nrf_gzll_add_packet_to_tx_fifo(0, data_payload_left, TX_PAYLOAD_LENGTH);
     nrf_gzll_add_packet_to_tx_fifo(1, data_payload_right, TX_PAYLOAD_LENGTH);
+    nrf_gzll_add_packet_to_tx_fifo(2, data_payload_pad0, TX_PAYLOAD_LENGTH);
 
     // Enable Gazell to start sending over the air
     nrf_gzll_enable();
@@ -204,11 +207,56 @@ int main(void)
                               ((data_payload_right[4] & 1<<1) ? 1:0) << 6;
         }
 
+        if (packet_received_pad0)
+        {
+            packet_received_pad0 = false;
+
+            data_buffer[10] =  ((data_payload_pad0[0] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_pad0[0] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_pad0[0] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_pad0[0] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_pad0[0] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_pad0[0] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_pad0[0] & 1<<1) ? 1:0) << 6;
+
+            data_buffer[11] =  ((data_payload_pad0[1] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_pad0[1] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_pad0[1] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_pad0[1] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_pad0[1] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_pad0[1] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_pad0[1] & 1<<1) ? 1:0) << 6;
+
+            data_buffer[12] =  ((data_payload_pad0[2] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_pad0[2] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_pad0[2] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_pad0[2] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_pad0[2] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_pad0[2] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_pad0[2] & 1<<1) ? 1:0) << 6;
+
+            data_buffer[13] =  ((data_payload_pad0[3] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_pad0[3] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_pad0[3] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_pad0[3] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_pad0[3] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_pad0[3] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_pad0[3] & 1<<1) ? 1:0) << 6;
+
+            data_buffer[14] =  ((data_payload_pad0[4] & 1<<7) ? 1:0) << 0 |
+                              ((data_payload_pad0[4] & 1<<6) ? 1:0) << 1 |
+                              ((data_payload_pad0[4] & 1<<5) ? 1:0) << 2 |
+                              ((data_payload_pad0[4] & 1<<4) ? 1:0) << 3 |
+                              ((data_payload_pad0[4] & 1<<3) ? 1:0) << 4 |
+                              ((data_payload_pad0[4] & 1<<2) ? 1:0) << 5 |
+                              ((data_payload_pad0[4] & 1<<1) ? 1:0) << 6;
+        }
+
         // checking for a poll request from QMK
         if (app_uart_get(&c) == NRF_SUCCESS && c == 's')
         {
             // sending data to QMK, and an end byte
-            nrf_drv_uart_tx(data_buffer,10);
+            nrf_drv_uart_tx(data_buffer,15);
             app_uart_put(0xE0);
 
             // debugging help, for printing keystates to a serial console
@@ -237,6 +285,7 @@ int main(void)
         // out of range, or sleeping due to no keys pressed, update keystates to off
         left_active++;
         right_active++;
+        pad0_active++;
         if (left_active > INACTIVE)
         {
             data_buffer[0] = 0;
@@ -254,6 +303,15 @@ int main(void)
             data_buffer[7] = 0;
             data_buffer[9] = 0;
             right_active = 0;
+        }
+        if (pad0_active > INACTIVE)
+        {
+            data_buffer[10] = 0;
+            data_buffer[11] = 0;
+            data_buffer[12] = 0;
+            data_buffer[13] = 0;
+            data_buffer[14] = 0;
+            pad0_active = 0;
         }
     }
 }
@@ -282,6 +340,13 @@ void nrf_gzll_host_rx_data_ready(uint32_t pipe, nrf_gzll_host_rx_info_t rx_info)
         right_active = 0;
         // Pop packet and write first byte of the payload to the GPIO port.
         nrf_gzll_fetch_packet_from_rx_fifo(pipe, data_payload_right, &data_payload_length);
+    }
+    else if (pipe == 2)
+    {
+        packet_received_pad0 = true;
+        pad0_active = 0;
+        // Pop packet and write first byte of the payload to the GPIO port.
+        nrf_gzll_fetch_packet_from_rx_fifo(pipe, data_payload_pad0, &data_payload_length);
     }
 
     // not sure if required, I guess if enough packets are missed during blocking uart
