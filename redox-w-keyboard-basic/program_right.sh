@@ -20,12 +20,10 @@ echo '============================= PROGRAMMING ============================='
 	sleep 0.1;
 	echo "nrf51 mass_erase";
 	sleep 1;
-	echo "reset";
-	sleep 1;
 	echo "reset halt";
 	sleep 0.1;
 	echo "flash write_image erase" $HEX;
-	sleep 11;
+	sleep 6;
 	echo "reset";
 	sleep 0.1;
 	exit;
