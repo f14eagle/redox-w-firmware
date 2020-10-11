@@ -23,7 +23,7 @@ echo '============================= PROGRAMMING ============================='
 	echo "reset halt";
 	sleep 0.1;
 	echo "flash write_image erase" $HEX;
-	sleep 11;
+	sleep 6;
 	echo "reset";
 	sleep 0.1;
 	exit;
